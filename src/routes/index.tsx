@@ -144,30 +144,46 @@ function CatalogPage() {
   };
 
   const csv = () => {
-    const rows = [
+    // If the user has an active order, export only ordered lines.
+    // Otherwise fall back to all currently-filtered products so the file is never empty.
+    const hasOrder = orderLines.length > 0;
+    const exportLines = hasOrder
+      ? orderLines
+      : filtered.map((p) => ({ p, q: 0 }));
+
+    const rows: string[][] = [
       ["RHL Product ID", "Item #", "RHL UPC", "Product", "Size", "Unit Price", "SRP", "Qty", "Line Total", "Note"],
-      ...orderLines.map((l) => [
-        l.p.rhlId,
-        l.p.item,
-        l.p.gsi,
-        l.p.name,
-        l.p.size,
-        (l.p.price ?? 0).toFixed(2),
-        retail[l.p.item] ?? "",
-        String(l.q),
-        ((l.p.price ?? 0) * l.q).toFixed(2),
-        lineNotes[l.p.item] ?? "",
+      ...exportLines.map(({ p, q }) => [
+        p.rhlId,
+        p.item,
+        p.gsi,
+        p.name,
+        p.size,
+        p.price != null ? p.price.toFixed(2) : "",
+        retail[p.item] ?? "",
+        q > 0 ? String(q) : "",
+        q > 0 ? ((p.price ?? 0) * q).toFixed(2) : "",
+        lineNotes[p.item] ?? "",
       ]),
-      [],
-      ["Store", info.store, "PO #", info.po, "Order Total", total.toFixed(2)],
     ];
+
+    if (hasOrder) {
+      rows.push(
+        [],
+        ["Store", info.store, "Contact", info.contact, "PO #", info.po],
+        ["Order Total", total.toFixed(2), "Units", String(units)],
+      );
+    }
+
     const body = rows
       .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
       .join("\n");
     const url = URL.createObjectURL(new Blob([body], { type: "text/csv" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = `RHL-order-${info.store || "form"}-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = hasOrder
+      ? `RHL-order-${info.store || "form"}-${new Date().toISOString().slice(0, 10)}.csv`
+      : `RHL-catalog-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -176,13 +192,12 @@ function CatalogPage() {
     const lines = orderLines
       .map(
         (l) =>
-          `${l.p.rhlId} | ${l.p.name} ${l.p.size} | Qty ${l.q} | ${money((l.p.price ?? 0) * l.q)}${
-            retail[l.p.item] ? ` | Retail ${retail[l.p.item]}` : ""
-          }${lineNotes[l.p.item] ? ` | ${lineNotes[l.p.item]}` : ""
+          `RHL ID: ${l.p.rhlId} | Item #: ${l.p.item} | ${l.p.name} ${l.p.size} | Qty ${l.q} | ${money((l.p.price ?? 0) * l.q)}${retail[l.p.item] ? ` | SRP ${retail[l.p.item]}` : ""
+          }${lineNotes[l.p.item] ? ` | Note: ${lineNotes[l.p.item]}` : ""
           }`,
       )
       .join("\n");
-    const body = `Store: ${info.store}\nContact: ${info.contact}\nEmail: ${info.email}\nPhone: ${info.phone}\nShip to: ${info.address}\nPO #: ${info.po}\nDate: ${info.date}\n\nORDER (by RHL Product ID)\n${lines}\n\nOrder total: ${money(total)}\n\nNotes: ${info.notes}`;
+    const body = `Store: ${info.store}\nContact: ${info.contact}\nEmail: ${info.email}\nPhone: ${info.phone}\nShip to: ${info.address}\nPO #: ${info.po}\nDate: ${info.date}\n\nORDER LINES\n${"─".repeat(60)}\n${lines}\n${"─".repeat(60)}\nOrder total: ${money(total)} (${units} units)\n\nNotes: ${info.notes}`;
     window.location.href = `mailto:${ORDER_EMAIL}?subject=${encodeURIComponent(
       `Wholesale order - ${info.store || "New order"}`,
     )}&body=${encodeURIComponent(body)}`;
@@ -315,9 +330,10 @@ function CatalogPage() {
               </h2>
               <div className="overflow-hidden rounded-xl border border-border bg-card">
                 <table className="w-full text-sm">
-                    <thead className="bg-secondary text-left text-xs uppercase tracking-wide text-secondary-foreground">
+                  <thead className="bg-secondary text-left text-xs uppercase tracking-wide text-secondary-foreground">
                     <tr>
                       <th className="px-3 py-2">RHL ID</th>
+                      <th className="px-3 py-2">Item #</th>
                       <th className="px-3 py-2">RHL UPC</th>
                       <th className="px-3 py-2">Product</th>
                       <th className="px-3 py-2">Size</th>
@@ -337,15 +353,13 @@ function CatalogPage() {
                           className={`border-t border-border align-top ${q > 0 ? "bg-secondary/50" : ""}`}
                         >
                           <td className="px-3 py-2 font-mono font-semibold">{p.rhlId}</td>
+                          <td className="px-3 py-2 font-mono text-sm font-semibold whitespace-nowrap">{p.item}</td>
                           <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
                             {p.gsi || "—"}
                           </td>
                           <td className="px-3 py-2">
                             <div className="font-semibold">{p.name}</div>
                             <div className="text-xs text-muted-foreground">{p.desc}</div>
-                            <div className="text-[11px] text-muted-foreground/80">
-                              Item #{p.item}
-                            </div>
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">{p.size}</td>
                           <td className="px-3 py-2 text-right whitespace-nowrap">
