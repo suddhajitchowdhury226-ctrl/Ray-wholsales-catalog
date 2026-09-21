@@ -176,8 +176,7 @@ function CatalogPage() {
     const lines = orderLines
       .map(
         (l) =>
-          `${l.p.rhlId} | ${l.p.name} ${l.p.size} | Qty ${l.q} | ${money((l.p.price ?? 0) * l.q)}${
-            retail[l.p.item] ? ` | Retail ${retail[l.p.item]}` : ""
+          `${l.p.rhlId} | ${l.p.name} ${l.p.size} | Qty ${l.q} | ${money((l.p.price ?? 0) * l.q)}${retail[l.p.item] ? ` | Retail ${retail[l.p.item]}` : ""
           }${lineNotes[l.p.item] ? ` | ${lineNotes[l.p.item]}` : ""
           }`,
       )
@@ -315,7 +314,7 @@ function CatalogPage() {
               </h2>
               <div className="overflow-hidden rounded-xl border border-border bg-card">
                 <table className="w-full text-sm">
-                    <thead className="bg-secondary text-left text-xs uppercase tracking-wide text-secondary-foreground">
+                  <thead className="bg-secondary text-left text-xs uppercase tracking-wide text-secondary-foreground">
                     <tr>
                       <th className="px-3 py-2">RHL ID</th>
                       <th className="px-3 py-2">RHL UPC</th>
@@ -343,9 +342,6 @@ function CatalogPage() {
                           <td className="px-3 py-2">
                             <div className="font-semibold">{p.name}</div>
                             <div className="text-xs text-muted-foreground">{p.desc}</div>
-                            <div className="text-[11px] text-muted-foreground/80">
-                              Item #{p.item}
-                            </div>
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">{p.size}</td>
                           <td className="px-3 py-2 text-right whitespace-nowrap">
