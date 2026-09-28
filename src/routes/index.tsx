@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import logo from "@/assets/rhl-logo.png.asset.json";
+
 import catalog from "@/data/products.json";
 
 export const Route = createFileRoute("/")({
@@ -203,13 +203,15 @@ function CatalogPage() {
     <div className="min-h-screen bg-background pb-28">
       <header className="no-print border-b border-border bg-card">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-4 py-4">
-          <img src={logo.url} alt="Ray's Healthy Living" className="h-14 w-auto" />
+          <a href="https://www.rayonewholesale.com/" target="_blank" rel="noreferrer">
+            <img src="/image.png" alt="Ray's Healthy Living" className="h-14 w-auto" />
+          </a>
           <div className="mr-auto">
             <h1 className="font-display text-2xl font-bold text-leaf">
               2026 Wholesale Order Catalog
             </h1>
             <p className="text-sm text-muted-foreground">
-              Order by RHL Product ID ·{" "}
+              Order by  ·{" "}
               <a
                 className="underline hover:text-primary"
                 href="https://www.rayonewholesale.com/"
@@ -394,7 +396,7 @@ function CatalogPage() {
         {/* Printable order form */}
         <div className="print-only">
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <img src={logo.url} alt="Ray's Healthy Living" style={{ height: "60px" }} />
+            <img src="/image.png" alt="Ray's Healthy Living" style={{ height: "60px" }} />
             <div>
               <h1 className="text-xl font-bold">2026 Wholesale Order Form</h1>
               <p className="text-xs">rayonewholesale.com · Order by RHL Product ID</p>
@@ -435,7 +437,7 @@ function CatalogPage() {
           <table className="mt-4 w-full border-collapse text-xs">
             <thead>
               <tr>
-                {["RHL ID", "Item #", "RHL UPC", "Product", "Size", "Price", "SRP", "Qty", "Total", "Note"].map(
+                {["RHL ID", "RHL UPC", "Product", "Size", "Price", "SRP", "Qty", "Total", "Note"].map(
                   (h) => (
                     <th key={h} className="border border-neutral-400 px-1 py-1 text-left">
                       {h}
@@ -451,7 +453,6 @@ function CatalogPage() {
               ).map(({ p, q }) => (
                 <tr key={p.item}>
                   <td className="border border-neutral-400 px-1 py-1">{p.rhlId}</td>
-                  <td className="border border-neutral-400 px-1 py-1">{p.item}</td>
                   <td className="border border-neutral-400 px-1 py-1">{p.gsi}</td>
                   <td className="border border-neutral-400 px-1 py-1">{p.name}</td>
                   <td className="border border-neutral-400 px-1 py-1">{p.size}</td>
