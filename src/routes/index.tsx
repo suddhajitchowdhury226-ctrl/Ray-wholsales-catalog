@@ -200,51 +200,57 @@ function CatalogPage() {
   );
 
   return (
-    <div className="min-h-screen bg-background pb-28">
+    <div className="min-h-screen bg-background pb-32">
+
+      {/* ── Header ── */}
       <header className="no-print border-b border-border bg-card">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-4 py-4">
-          <a href="https://www.rayonewholesale.com/" target="_blank" rel="noreferrer">
-            <img src="/image.png" alt="Ray's Healthy Living" className="h-14 w-auto" />
-          </a>
-          <div className="mr-auto">
-            <h1 className="font-display text-2xl font-bold text-leaf">
-              2026 Wholesale Order Catalog
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Order by  ·{" "}
-              <a
-                className="underline hover:text-primary"
-                href="https://www.rayonewholesale.com/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                rayonewholesale.com
-              </a>
-            </p>
+        <div className="mx-auto max-w-7xl px-4 py-3">
+          {/* Top row: logo + title */}
+          <div className="flex items-center gap-3">
+            <a href="https://www.rayonewholesale.com/" target="_blank" rel="noreferrer" className="shrink-0">
+              <img src="/image.png" alt="Ray's Healthy Living" className="h-12 w-auto sm:h-14" />
+            </a>
+            <div className="min-w-0">
+              <h1 className="font-display text-lg font-bold text-leaf sm:text-2xl leading-tight">
+                2026 Wholesale Order Catalog
+              </h1>
+              <p className="text-xs text-muted-foreground sm:text-sm">
+                <a
+                  className="underline hover:text-primary"
+                  href="https://www.rayonewholesale.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  rayonewholesale.com
+                </a>
+              </p>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-2">
+
+          {/* Action buttons row */}
+          <div className="mt-3 flex flex-wrap gap-2">
             <a
               href="/rhl-2026-wholesale-catalog.pdf"
               download="RHL-2026-Wholesale-Catalog.pdf"
-              className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+              className="rounded-md bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90 sm:px-4 sm:text-sm"
             >
-              Download Catalog PDF
+              Download PDF
             </a>
             <button
               onClick={() => window.print()}
-              className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+              className="rounded-md bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90 sm:px-4 sm:text-sm"
             >
               Print / Save PDF
             </button>
             <button
               onClick={csv}
-              className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground hover:opacity-90"
+              className="rounded-md bg-accent px-3 py-2 text-xs font-semibold text-accent-foreground hover:opacity-90 sm:px-4 sm:text-sm"
             >
               Download CSV
             </button>
             <button
               onClick={emailOrder}
-              className="rounded-md border border-primary px-4 py-2 text-sm font-semibold text-primary hover:bg-secondary"
+              className="rounded-md border border-primary px-3 py-2 text-xs font-semibold text-primary hover:bg-secondary sm:px-4 sm:text-sm"
             >
               Email order
             </button>
@@ -253,9 +259,11 @@ function CatalogPage() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-6">
+
+        {/* ── Order details ── */}
         <section className="no-print rounded-xl border border-border bg-surface p-4">
           <h2 className="mb-3 text-lg font-bold text-leaf">Order details</h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             {field("store", "Store name")}
             {field("contact", "Contact name")}
             {field("email", "Email", "email")}
@@ -271,37 +279,41 @@ function CatalogPage() {
           </p>
         </section>
 
-        <section className="no-print mt-6 flex flex-wrap items-center gap-3">
+        {/* ── Search / filter bar ── */}
+        <section className="no-print mt-6 space-y-3 sm:space-y-0 sm:flex sm:flex-wrap sm:items-center sm:gap-3">
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by name, RHL ID, item # or ingredient…"
-            className="min-w-64 flex-1 rounded-md border border-input bg-card px-3 py-2 outline-none focus:border-ring focus:ring-2 focus:ring-ring/30"
+            placeholder="Search by name, RHL ID or ingredient…"
+            className="w-full sm:min-w-48 sm:flex-1 rounded-md border border-input bg-card px-3 py-2 outline-none focus:border-ring focus:ring-2 focus:ring-ring/30 text-sm"
           />
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="rounded-md border border-input bg-card px-3 py-2"
-          >
-            <option>All</option>
-            {CATEGORIES.map((c) => (
-              <option key={c}>{c}</option>
-            ))}
-          </select>
-          <label className="flex items-center gap-2 text-sm font-semibold">
-            <input
-              type="checkbox"
-              checked={onlySelected}
-              onChange={(e) => setOnlySelected(e.target.checked)}
-              className="size-4 accent-[oklch(0.58_0.16_140)]"
-            />
-            Only my order
-          </label>
-          <button onClick={clearOrder} className="text-sm text-muted-foreground underline">
-            Clear
-          </button>
+          <div className="flex items-center gap-3 flex-wrap">
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="flex-1 sm:flex-none rounded-md border border-input bg-card px-3 py-2 text-sm"
+            >
+              <option>All</option>
+              {CATEGORIES.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
+            </select>
+            <label className="flex items-center gap-2 text-sm font-semibold whitespace-nowrap">
+              <input
+                type="checkbox"
+                checked={onlySelected}
+                onChange={(e) => setOnlySelected(e.target.checked)}
+                className="size-4 accent-[oklch(0.58_0.16_140)]"
+              />
+              Only my order
+            </label>
+            <button onClick={clearOrder} className="text-sm text-muted-foreground underline whitespace-nowrap">
+              Clear
+            </button>
+          </div>
         </section>
 
+        {/* ── Product catalog ── */}
         <div className="no-print mt-6 space-y-8">
           {grouped.length === 0 && (
             <p className="py-12 text-center text-muted-foreground">No products match your search.</p>
@@ -314,7 +326,9 @@ function CatalogPage() {
                   ({items.length} items)
                 </span>
               </h2>
-              <div className="overflow-hidden rounded-xl border border-border bg-card">
+
+              {/* Desktop table — hidden on mobile */}
+              <div className="hidden md:block overflow-x-auto rounded-xl border border-border bg-card">
                 <table className="w-full text-sm">
                   <thead className="bg-secondary text-left text-xs uppercase tracking-wide text-secondary-foreground">
                     <tr>
@@ -354,9 +368,7 @@ function CatalogPage() {
                               type="text"
                               inputMode="decimal"
                               value={retail[p.item] ?? ""}
-                              onChange={(e) =>
-                                setRetail({ ...retail, [p.item]: e.target.value })
-                              }
+                              onChange={(e) => setRetail({ ...retail, [p.item]: e.target.value })}
                               placeholder="—"
                               className="w-24 rounded-md border border-input bg-background px-2 py-1 text-right"
                             />
@@ -373,9 +385,7 @@ function CatalogPage() {
                           <td className="px-3 py-2">
                             <input
                               value={lineNotes[p.item] ?? ""}
-                              onChange={(e) =>
-                                setLineNotes({ ...lineNotes, [p.item]: e.target.value })
-                              }
+                              onChange={(e) => setLineNotes({ ...lineNotes, [p.item]: e.target.value })}
                               placeholder="write here…"
                               className="w-full rounded-md border border-input bg-background px-2 py-1"
                             />
@@ -389,11 +399,86 @@ function CatalogPage() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Mobile card list — hidden on md+ */}
+              <div className="md:hidden space-y-3">
+                {items.map((p) => {
+                  const q = qty[p.item] ?? 0;
+                  return (
+                    <div
+                      key={p.item}
+                      className={`rounded-xl border border-border bg-card p-4 ${q > 0 ? "border-primary/50 bg-secondary/30" : ""}`}
+                    >
+                      {/* Product name + RHL ID */}
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-sm leading-tight">{p.name}</div>
+                          {p.desc && (
+                            <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{p.desc}</div>
+                          )}
+                        </div>
+                        <span className="shrink-0 font-mono text-xs font-bold text-leaf bg-secondary px-2 py-0.5 rounded">
+                          {p.rhlId}
+                        </span>
+                      </div>
+
+                      {/* Meta row */}
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground mb-3">
+                        {p.size && <span><span className="font-medium text-foreground">Size:</span> {p.size}</span>}
+                        {p.price != null && <span><span className="font-medium text-foreground">Price:</span> {money(p.price)}</span>}
+                        {p.gsi && <span><span className="font-medium text-foreground">UPC:</span> {p.gsi}</span>}
+                      </div>
+
+                      {/* Controls */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <label className="flex flex-col gap-1 text-xs">
+                          <span className="font-medium text-muted-foreground">SRP</span>
+                          <input
+                            type="text"
+                            inputMode="decimal"
+                            value={retail[p.item] ?? ""}
+                            onChange={(e) => setRetail({ ...retail, [p.item]: e.target.value })}
+                            placeholder="—"
+                            className="rounded-md border border-input bg-background px-2 py-1.5 text-right text-sm"
+                          />
+                        </label>
+                        <label className="flex flex-col gap-1 text-xs">
+                          <span className="font-medium text-muted-foreground">Qty</span>
+                          <input
+                            type="number"
+                            min={0}
+                            value={q || ""}
+                            onChange={(e) => setQ(p.item, Number(e.target.value))}
+                            className="rounded-md border border-input bg-background px-2 py-1.5 text-right text-sm"
+                          />
+                        </label>
+                        <label className="col-span-2 flex flex-col gap-1 text-xs">
+                          <span className="font-medium text-muted-foreground">Line note</span>
+                          <input
+                            value={lineNotes[p.item] ?? ""}
+                            onChange={(e) => setLineNotes({ ...lineNotes, [p.item]: e.target.value })}
+                            placeholder="write here…"
+                            className="rounded-md border border-input bg-background px-2 py-1.5 text-sm"
+                          />
+                        </label>
+                      </div>
+
+                      {/* Line total */}
+                      {q > 0 && (
+                        <div className="mt-2 text-right text-sm font-bold text-leaf">
+                          {money((p.price ?? 0) * q)}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
             </section>
           ))}
         </div>
 
-        {/* Printable order form */}
+        {/* ── Printable order form ── */}
         <div className="print-only">
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <img src="/image.png" alt="Ray's Healthy Living" style={{ height: "60px" }} />
@@ -405,31 +490,17 @@ function CatalogPage() {
           <table className="mt-3 w-full text-xs">
             <tbody>
               <tr>
-                <td>
-                  <b>Store:</b> {info.store || "____________________"}
-                </td>
-                <td>
-                  <b>Contact:</b> {info.contact || "____________________"}
-                </td>
-                <td>
-                  <b>PO #:</b> {info.po || "__________"}
-                </td>
-                <td>
-                  <b>Date:</b> {info.date || "__________"}
-                </td>
+                <td><b>Store:</b> {info.store || "____________________"}</td>
+                <td><b>Contact:</b> {info.contact || "____________________"}</td>
+                <td><b>PO #:</b> {info.po || "__________"}</td>
+                <td><b>Date:</b> {info.date || "__________"}</td>
               </tr>
               <tr>
-                <td colSpan={2}>
-                  <b>Email:</b> {info.email || "____________________"}
-                </td>
-                <td colSpan={2}>
-                  <b>Phone:</b> {info.phone || "____________________"}
-                </td>
+                <td colSpan={2}><b>Email:</b> {info.email || "____________________"}</td>
+                <td colSpan={2}><b>Phone:</b> {info.phone || "____________________"}</td>
               </tr>
               <tr>
-                <td colSpan={4}>
-                  <b>Ship to:</b> {info.address || "________________________________________"}
-                </td>
+                <td colSpan={4}><b>Ship to:</b> {info.address || "________________________________________"}</td>
               </tr>
             </tbody>
           </table>
@@ -437,13 +508,9 @@ function CatalogPage() {
           <table className="mt-4 w-full border-collapse text-xs">
             <thead>
               <tr>
-                {["RHL ID", "RHL UPC", "Product", "Size", "Price", "SRP", "Qty", "Total", "Note"].map(
-                  (h) => (
-                    <th key={h} className="border border-neutral-400 px-1 py-1 text-left">
-                      {h}
-                    </th>
-                  ),
-                )}
+                {["RHL ID", "RHL UPC", "Product", "Size", "Price", "SRP", "Qty", "Total", "Note"].map((h) => (
+                  <th key={h} className="border border-neutral-400 px-1 py-1 text-left">{h}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
@@ -456,14 +523,10 @@ function CatalogPage() {
                   <td className="border border-neutral-400 px-1 py-1">{p.gsi}</td>
                   <td className="border border-neutral-400 px-1 py-1">{p.name}</td>
                   <td className="border border-neutral-400 px-1 py-1">{p.size}</td>
-                  <td className="border border-neutral-400 px-1 py-1">
-                    {p.price != null ? money(p.price) : ""}
-                  </td>
+                  <td className="border border-neutral-400 px-1 py-1">{p.price != null ? money(p.price) : ""}</td>
                   <td className="border border-neutral-400 px-1 py-1">{retail[p.item] ?? ""}</td>
                   <td className="border border-neutral-400 px-1 py-1">{q || ""}</td>
-                  <td className="border border-neutral-400 px-1 py-1">
-                    {q ? money((p.price ?? 0) * q) : ""}
-                  </td>
+                  <td className="border border-neutral-400 px-1 py-1">{q ? money((p.price ?? 0) * q) : ""}</td>
                   <td className="border border-neutral-400 px-1 py-1">{lineNotes[p.item] ?? ""}</td>
                 </tr>
               ))}
@@ -479,24 +542,50 @@ function CatalogPage() {
         </div>
       </main>
 
+      {/* ── Sticky footer ── */}
       <footer className="no-print fixed inset-x-0 bottom-0 border-t border-border bg-card/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-4 py-3">
-          <div className="mr-auto text-sm">
-            <b>{orderLines.length}</b> products · <b>{units}</b> units
+        <div className="mx-auto max-w-7xl px-4 py-3">
+          {/* Mobile: stacked layout */}
+          <div className="flex items-center justify-between gap-3 sm:hidden">
+            <div className="text-sm">
+              <span className="font-bold text-leaf text-lg">{money(total)}</span>
+              <span className="ml-2 text-xs text-muted-foreground">{units} units</span>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setOnlySelected(true)}
+                className="rounded-md border border-primary px-3 py-2 text-xs font-semibold text-primary hover:bg-secondary"
+              >
+                Review
+              </button>
+              <button
+                onClick={() => window.print()}
+                className="rounded-md bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground"
+              >
+                Print
+              </button>
+            </div>
           </div>
-          <div className="font-display text-xl font-bold text-leaf">{money(total)}</div>
-          <button
-            onClick={() => setOnlySelected(true)}
-            className="rounded-md border border-primary px-3 py-2 text-sm font-semibold text-primary hover:bg-secondary"
-          >
-            Review order
-          </button>
-          <button
-            onClick={() => window.print()}
-            className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
-          >
-            Print order form
-          </button>
+
+          {/* Desktop: single row */}
+          <div className="hidden sm:flex items-center gap-4">
+            <div className="mr-auto text-sm">
+              <b>{orderLines.length}</b> products · <b>{units}</b> units
+            </div>
+            <div className="font-display text-xl font-bold text-leaf">{money(total)}</div>
+            <button
+              onClick={() => setOnlySelected(true)}
+              className="rounded-md border border-primary px-3 py-2 text-sm font-semibold text-primary hover:bg-secondary"
+            >
+              Review order
+            </button>
+            <button
+              onClick={() => window.print()}
+              className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+            >
+              Print order form
+            </button>
+          </div>
         </div>
       </footer>
     </div>
